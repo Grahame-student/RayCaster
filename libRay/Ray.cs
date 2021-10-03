@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RayCaster.LibRay
 { 
@@ -44,19 +43,22 @@ namespace RayCaster.LibRay
         /// <summary>
         /// Distance to travel on Y axis when looking for horizontal edges
         /// </summary>
-        public Single Hdy { get; }
+        public Single Hdy { get; private set; }
+
         /// <summary>
         /// Distance to travel on X axis when looking for horizontal edges
         /// </summary>
-        public Single Hdx { get; }
+        public Single Hdx { get; private set; }
+
         /// <summary>
         /// Distance to travel on Y axis when looking for vertical edges
         /// </summary>
-        public Single Vdy { get; }
+        public Single Vdy { get; private set; }
+
         /// <summary>
         /// Distance to travel on X axis when looking for vertical edges
         /// </summary>
-        public Single Vdx { get; }
+        public Single Vdx { get; private set; }
 
         public Ray(Single theta)
         {
@@ -66,6 +68,18 @@ namespace RayCaster.LibRay
             Right = Theta is < DEGREES_TOP or > DEGREES_BOTTOM;
             Single tanTheta = MathF.Tan(ThetaRad);
 
+            SetHorizontalSearchParams(tanTheta);
+            SetVerticalSearchParams(tanTheta);
+        }
+
+        private static Single GetNormalisedTheta(Single theta)
+        {
+            Single result = theta % DEGREES_IN_CIRCLE;
+            return result < 0 ? result + DEGREES_IN_CIRCLE : result;
+        }
+
+        private void SetHorizontalSearchParams(Single tanTheta)
+        {
             Hdy = Up ? -1 : 1;
             if (IsHorizontal())
             {
@@ -74,9 +88,12 @@ namespace RayCaster.LibRay
             else
             {
                 Single result = MathF.Abs(1 / tanTheta);
-                Hdx = Right ? result: -result;
+                Hdx = Right ? result : -result;
             }
+        }
 
+        private void SetVerticalSearchParams(Single tanTheta)
+        {
             if (IsVertical())
             {
                 Vdy = Up ? -MAX_UNITS : MAX_UNITS;
@@ -85,6 +102,7 @@ namespace RayCaster.LibRay
             {
                 Vdy = tanTheta;
             }
+
             Vdx = Right ? 1 : -1;
         }
 
@@ -98,12 +116,6 @@ namespace RayCaster.LibRay
         {
             return Math.Abs(Theta - DEGREES_TOP) < SMALL_DELTA || 
                    Math.Abs(Theta - DEGREES_BOTTOM) < SMALL_DELTA;
-        }
-
-        private static Single GetNormalisedTheta(Single theta)
-        {
-            Single result = theta % DEGREES_IN_CIRCLE;
-            return result < 0 ? result + DEGREES_IN_CIRCLE : result;
         }
     }
 }
