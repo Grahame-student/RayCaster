@@ -15,6 +15,9 @@ namespace RayCaster.FrontEnd
 
         private const Single DEG_TO_RAD = MathF.PI / 180;
 
+        // furthest distance the player can see, in pixels
+        private const Int32 MAX_VIEW_DIST = 400;
+
         private readonly Int32 _width;
         private readonly Int32 _height;
 
@@ -131,7 +134,6 @@ namespace RayCaster.FrontEnd
             Single pY = (player.Y * CellHeight);
 
             var ray = new Ray(theta);
-            //Debug.WriteLine($"Theta: {ray.Theta}");
             Target hTarget = GetHorizontalWall(gameMap, ray, pX, pY);
             //Target vTarget = GetVerticalWall(gameMap, theta, pX, pY);
 
@@ -182,7 +184,7 @@ namespace RayCaster.FrontEnd
             Single nextY = aY;
             Single nextX = aX;
 
-            MapObjectType type = MapObjectType.Boundary;
+            var type = MapObjectType.Boundary;
             while(IsWithinVisibleBounds(nextX, nextY))
             {
                 if (gameMap[GetCol(nextX), GetRow(nextY)].Type == MapObjectType.Wall)
@@ -190,6 +192,7 @@ namespace RayCaster.FrontEnd
                     type = MapObjectType.Wall;
                     break;
                 }
+                // NOTE: Currently this is incrementing a pixel at a time rather than a tile at a time
                 nextY += ray.Hdy;
                 nextX += ray.Hdx;
             }
@@ -208,6 +211,23 @@ namespace RayCaster.FrontEnd
 
         private Target GetVerticalWall(Map gameMap, Single theta, Single pX, Single pY)
         {
+            // Find vertical walls
+            //
+            // |     |B
+            // |     /
+            // |    /|
+            // +---/-+
+            // |  /  |  ^ - player facing up
+            // | ^   |  / - ray at 60 degrees
+            // |     |  B - first pixel inside next tile in direction of ray
+            // |     |
+            // |     |
+            // +-----+
+            //
+            // Locate nearest vertical tile boundary in direction of ray
+            // Tiles contain pixels from (x * CellWidth) to (x * CellWidth) - 1, e.g. 0 to 39 for 40 x 40 tiles
+
+
             // Between 0 and 2 * Pi
             Single thetaRad = GetCorrectedTheta((theta) * DEG_TO_RAD);
             Single correctionY = IsUp(thetaRad) ? -1 : 1;
@@ -237,11 +257,6 @@ namespace RayCaster.FrontEnd
             }
 
             return new Target(pX, pY, nextX, nextY, MapObjectType.Wall);
-        }
-
-        private bool IsVertical(Single thetaRad)
-        {
-            return Math.Abs(thetaRad - (MathF.PI / 2)) < 0.0001f || Math.Abs(thetaRad - ((3 * MathF.PI) / 2)) < 0.0001f;
         }
 
         private static Boolean IsUp(Single thetaRad)
@@ -317,14 +332,12 @@ namespace RayCaster.FrontEnd
             graphics.DrawLine(new Pen(penColour), left, top, left, top + wallHeight);
         }
 
-        // furthest distance the player can see, in pixels
-        private const Int32 MAX_VIEW_DIST = 400;
-        private Color GetScaledColour(Single wallDist, Color baseColour)
+        private static Color GetScaledColour(Single wallDist, Color baseColour)
         {
             Single factor = (100f - ((100f / MAX_VIEW_DIST) * wallDist)) / 100f;
-            Byte red = (Byte)(baseColour.R * factor);
-            Byte green = (Byte)(baseColour.G * factor);
-            Byte blue = (Byte)(baseColour.B * factor);
+            var red = (Byte)(baseColour.R * factor);
+            var green = (Byte)(baseColour.G * factor);
+            var blue = (Byte)(baseColour.B * factor);
             return Color.FromArgb(red, green, blue);
         }
 

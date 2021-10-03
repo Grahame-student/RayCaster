@@ -10,6 +10,7 @@ namespace RayCaster
         private static readonly SolidBrush BrushFloor = new(Color.White);
         private static readonly SolidBrush BrushWall = new(Color.Gray);
         private static readonly SolidBrush BrushCeiling= new(Color.Black);
+        private static readonly SolidBrush BrushBoundary = new(Color.DarkGray);
 
         internal static Brush GetBrush(MapObjectType objectType)
         {
@@ -19,7 +20,8 @@ namespace RayCaster
                 MapObjectType.Floor => BrushFloor,
                 MapObjectType.Wall => BrushWall,
                 MapObjectType.Ceiling => BrushCeiling,
-                _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
+                MapObjectType.Boundary => BrushBoundary,
+                _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, @"Invalid brush requested, nothing associated with requested MapObjectType")
             };
         }
     }

@@ -77,11 +77,27 @@ namespace RayCaster.Test.TestLibRay
         }
 
         [Test]
+        public void Right_ReturnsFalse_WhenThetaGreaterThan90()
+        {
+            _ray = new Ray(90 + SMALL_DELTA);
+
+            Assert.That(_ray.Right, Is.False);
+        }
+
+        [Test]
         public void Right_ReturnsTrue_WhenThetaGreaterThan270()
         {
             _ray = new Ray(270 + SMALL_DELTA);
 
             Assert.That(_ray.Right, Is.True);
+        }
+
+        [Test]
+        public void Right_ReturnsFalse_WhenThetaLessThan270()
+        {
+            _ray = new Ray(270 - SMALL_DELTA);
+
+            Assert.That(_ray.Right, Is.False);
         }
 
         [Test]
@@ -112,7 +128,7 @@ namespace RayCaster.Test.TestLibRay
         }
 
         [Test]
-        public void Hdx_Returns_1OverTanTheta()
+        public void Hdx_Returns_OneOverTanTheta()
         {
             _ray = new Ray(SOME_THETA);
 
@@ -121,7 +137,7 @@ namespace RayCaster.Test.TestLibRay
         }
 
         [Test]
-        public void Hdx_Returns_1OverTanThet()
+        public void Hdx_ReturnsMaxDelta_WhenThetaIs0()
         {
             // Ray is horizontal and facing right
             // If the ray travels along Y axis by 1 unit (hint, it can't!)
@@ -131,15 +147,25 @@ namespace RayCaster.Test.TestLibRay
             Assert.That(_ray.Hdx, Is.EqualTo(MAX_DELTA));
         }
 
-
         [Test]
-        public void Hdx_Returns_1OverTanThe()
+        public void Hdx_ReturnsMinusMaxDelta_WhenThetaIs180()
         {
-            // Horizontal and facing left
+            // Ray is horizontal and facing left
+            // If the ray travels along Y axis by 1 unit (hint, it can't!)
+            // It would need to travel an infinite distance along the X axis
             _ray = new Ray(180);
 
-            Single expectedResult = 1 / MathF.Tan(_ray.ThetaRad);
-            Assert.That(_ray.Hdx, Is.EqualTo(expectedResult));
+            Assert.That(_ray.Hdx, Is.EqualTo(-MAX_DELTA));
+        }
+
+        [Test]
+        public void Hdx_SanityCheck_OverFullCircle()
+        {
+            for (Single theta = 0; theta < FULL_CIRCLE; theta += 0.01f)
+            {
+                _ray = new Ray(theta);
+                Assert.That(_ray.Hdx, _ray.Right ? Is.GreaterThanOrEqualTo(0) : Is.LessThanOrEqualTo(0), $"Problem with theta: {theta}");
+            }
         }
 
         [Test]
@@ -149,6 +175,28 @@ namespace RayCaster.Test.TestLibRay
 
             Single expectedResult = MathF.Tan(_ray.ThetaRad);
             Assert.That(_ray.Vdy, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        public void Vdy_ReturnsMinusMaxDelta_WhenThetaIs90()
+        {
+            // Ray is vertical and facing up
+            // If the ray travels along X axis by 1 unit (hint, it can't!)
+            // It would need to travel an infinite distance along the Y axis
+            _ray = new Ray(90);
+
+            Assert.That(_ray.Vdy, Is.EqualTo(-MAX_DELTA));
+        }
+
+        [Test]
+        public void Vdy_ReturnsMaxDelta_WhenThetaIs270()
+        {
+            // Ray is vertical and facing down
+            // If the ray travels along X axis by 1 unit (hint, it can't!)
+            // It would need to travel an infinite distance along the Y axis
+            _ray = new Ray(270);
+
+            Assert.That(_ray.Vdy, Is.EqualTo(MAX_DELTA));
         }
 
         [Test]

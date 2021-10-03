@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RayCaster.LibRay
 { 
@@ -12,6 +13,9 @@ namespace RayCaster.LibRay
 
         private const Single DEG_TO_RAD = MathF.PI / 180;
 
+        private const Single SMALL_DELTA = 0.0001f;
+
+        // Value to use when the result of the Tan function is infinite
         private const Single MAX_UNITS = 999999;
 
         /// <summary>
@@ -61,12 +65,40 @@ namespace RayCaster.LibRay
             Up = Theta is > DEGREES_RIGHT and < DEGREES_LEFT;
             Right = Theta is < DEGREES_TOP or > DEGREES_BOTTOM;
             Single tanTheta = MathF.Tan(ThetaRad);
+
             Hdy = Up ? -1 : 1;
-            Hdx = Theta == 0 ? MAX_UNITS : 1 / tanTheta;
-            Vdy = tanTheta;
+            if (IsHorizontal())
+            {
+                Hdx = Right ? MAX_UNITS : -MAX_UNITS;
+            }
+            else
+            {
+                Single result = MathF.Abs(1 / tanTheta);
+                Hdx = Right ? result: -result;
+            }
+
+            if (IsVertical())
+            {
+                Vdy = Up ? -MAX_UNITS : MAX_UNITS;
+            }
+            else
+            {
+                Vdy = tanTheta;
+            }
             Vdx = Right ? 1 : -1;
         }
 
+        private Boolean IsHorizontal()
+        {
+            return Math.Abs(Theta - DEGREES_RIGHT) < SMALL_DELTA || 
+                   Math.Abs(Theta - DEGREES_LEFT) < SMALL_DELTA;
+        }
+
+        private Boolean IsVertical()
+        {
+            return Math.Abs(Theta - DEGREES_TOP) < SMALL_DELTA || 
+                   Math.Abs(Theta - DEGREES_BOTTOM) < SMALL_DELTA;
+        }
 
         private static Single GetNormalisedTheta(Single theta)
         {
