@@ -311,10 +311,23 @@ namespace RayCaster.FrontEnd
             Single left = _width - column;
             Single top = (_height - wallHeight) / 2;
 
-            Pen pen = type == MapObjectType.Boundary ? new Pen(Color.DarkGray) : new Pen(Color.Coral);
+            Color baseColour = type == MapObjectType.Boundary ? Color.DarkGray : Color.Coral;
+            Color penColour = GetScaledColour(wallDist, baseColour);
 
-            graphics.DrawLine(pen, left, top, left, top + wallHeight);
+            graphics.DrawLine(new Pen(penColour), left, top, left, top + wallHeight);
         }
+
+        // furthest distance the player can see, in pixels
+        private const Int32 MAX_VIEW_DIST = 400;
+        private Color GetScaledColour(Single wallDist, Color baseColour)
+        {
+            Single factor = (100f - ((100f / MAX_VIEW_DIST) * wallDist)) / 100f;
+            Byte red = (Byte)(baseColour.R * factor);
+            Byte green = (Byte)(baseColour.G * factor);
+            Byte blue = (Byte)(baseColour.B * factor);
+            return Color.FromArgb(red, green, blue);
+        }
+
         #endregion
     }
 }
