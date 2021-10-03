@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayCaster.FrontEnd", "RayCaster\RayCaster.FrontEnd.csproj", "{D940402C-3200-432D-8A60-B51E1A9EE87A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{26FCEA12-2DA3-43C2-A155-5C7E57690E8E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayCaster.LibRay", "libRay\RayCaster.LibRay.csproj", "{74014386-569C-4D39-B1AA-1E711562A7A6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayCaster.Test.TestLibRay", "TestLibRay\RayCaster.Test.TestLibRay.csproj", "{EBF3AAB7-1BB7-419C-8FED-B171AB5CAB92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D940402C-3200-432D-8A60-B51E1A9EE87A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D940402C-3200-432D-8A60-B51E1A9EE87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D940402C-3200-432D-8A60-B51E1A9EE87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D940402C-3200-432D-8A60-B51E1A9EE87A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74014386-569C-4D39-B1AA-1E711562A7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74014386-569C-4D39-B1AA-1E711562A7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74014386-569C-4D39-B1AA-1E711562A7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74014386-569C-4D39-B1AA-1E711562A7A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBF3AAB7-1BB7-419C-8FED-B171AB5CAB92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBF3AAB7-1BB7-419C-8FED-B171AB5CAB92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBF3AAB7-1BB7-419C-8FED-B171AB5CAB92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBF3AAB7-1BB7-419C-8FED-B171AB5CAB92}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96FBAED0-DA98-4D3A-A1AD-7B7503EC8F59}
+	EndGlobalSection
+EndGlobal
