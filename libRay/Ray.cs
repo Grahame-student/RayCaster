@@ -71,7 +71,7 @@ namespace RayCaster.LibRay
         private static Single GetNormalisedTheta(Single theta)
         {
             Single result = theta % DEGREES_IN_CIRCLE;
-            return result > 0 ? result : result + DEGREES_IN_CIRCLE;
+            return result < 0 ? result + DEGREES_IN_CIRCLE : result;
         }
     }
 }

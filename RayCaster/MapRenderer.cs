@@ -182,13 +182,18 @@ namespace RayCaster.FrontEnd
             Single nextY = aY;
             Single nextX = aX;
 
+            MapObjectType type = MapObjectType.Boundary;
             while(IsWithinVisibleBounds(nextX, nextY))
             {
-                if (gameMap[GetCol(nextX), GetRow(nextY)].Type == MapObjectType.Wall) break;
+                if (gameMap[GetCol(nextX), GetRow(nextY)].Type == MapObjectType.Wall)
+                {
+                    type = MapObjectType.Wall;
+                    break;
+                }
                 nextY += ray.Hdy;
                 nextX += ray.Hdx;
             }
-            return new Target(pX, pY, nextX, nextY);
+            return new Target(pX, pY, nextX, nextY, type);
         }
 
         private Boolean IsWithinVisibleBounds(Single nextX, Single nextY)
@@ -231,7 +236,7 @@ namespace RayCaster.FrontEnd
                 nextX += dX;
             }
 
-            return new Target(pX, pY, nextX, nextY);
+            return new Target(pX, pY, nextX, nextY, MapObjectType.Wall);
         }
 
         private bool IsVertical(Single thetaRad)
@@ -273,8 +278,42 @@ namespace RayCaster.FrontEnd
             graphics.FillRectangle(BrushFactory.GetBrush(MapObjectType.Floor), 0, midHeight, _width, midHeight);
         }
 
-        private void RenderMap(Map map, Graphics graphics)
+        private void RenderMap(Map gameMap, Graphics graphics)
         {
+            // Get point to start all rays from, aka the player's eyes
+            Player player = gameMap.Player;
+
+            // First ray is from the right of the field of view and in the direction the player is looking
+            Single theta = player.Angle - (_fieldOfView / 2f);
+
+            // the amount to increment theta by for each ray
+            // generate 1 ray for each pixel column
+            Single dTheta = _fieldOfView / _width;
+            for (var rays = 0; rays < _width; rays++)
+            {
+                theta += dTheta;
+
+                // Player position in pixels
+                Single pX = (player.X * CellWidth) + (CellWidth / 2);
+                Single pY = (player.Y * CellHeight);
+
+                var ray = new Ray(theta);
+                Target hTarget = GetHorizontalWall(gameMap, ray, pX, pY);
+
+                DrawWall(graphics, rays, hTarget.Dist, hTarget.Type);
+            }
+        }
+
+        private void DrawWall(Graphics graphics, Single column, Single wallDist, MapObjectType type)
+        {
+            Single wallHeight = (CellHeight / wallDist) * 277;
+
+            Single left = _width - column;
+            Single top = (_height - wallHeight) / 2;
+
+            Pen pen = type == MapObjectType.Boundary ? new Pen(Color.DarkGray) : new Pen(Color.Coral);
+
+            graphics.DrawLine(pen, left, top, left, top + wallHeight);
         }
         #endregion
     }

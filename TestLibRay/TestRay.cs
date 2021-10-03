@@ -16,6 +16,8 @@ namespace RayCaster.Test.TestLibRay
         // 0.0001 is a smaller delta than we'd expect to see in normal use
         private const Single SMALL_DELTA = 0.0001f;
 
+        private const Single MAX_DELTA = 999999;
+
         private Ray _ray;
 
         [Test]
@@ -126,7 +128,7 @@ namespace RayCaster.Test.TestLibRay
             // It would need to travel an infinite distance along the X axis
             _ray = new Ray(0);
 
-            Assert.That(_ray.Hdx, Is.EqualTo(0));
+            Assert.That(_ray.Hdx, Is.EqualTo(MAX_DELTA));
         }
 
 

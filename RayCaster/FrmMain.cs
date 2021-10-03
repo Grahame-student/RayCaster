@@ -33,19 +33,12 @@ namespace RayCaster.FrontEnd
 
         private void pic2DMap_Paint(Object sender, PaintEventArgs e)
         {
-            try
-            {
-                var watch = new Stopwatch();
-                watch.Start();
-                _render.Update(_map, e.Graphics, chkDrawMapRays.Checked);
-                watch.Stop();
+            var watch = new Stopwatch();
+            watch.Start();
+            _render.Update(_map, e.Graphics, chkDrawMapRays.Checked);
+            watch.Stop();
 
-                Debug.WriteLine($"Time to render map: {watch.Elapsed}");
-            }
-            catch
-            {
-                Debug.WriteLine("Render error");
-            }
+            Debug.WriteLine($"Time to render map: {watch.Elapsed}");
         }
 
         private void pic2DMap_MouseUp(Object sender, MouseEventArgs e)
@@ -59,6 +52,7 @@ namespace RayCaster.FrontEnd
             if (_map.Changed)
             {
                 pic2DMap.Invalidate();
+                picRender.Invalidate();
 
             }
         }
@@ -75,6 +69,7 @@ namespace RayCaster.FrontEnd
 
         private void btnRender_Click(Object sender, EventArgs e)
         {
+            pic2DMap.Invalidate();
             picRender.Invalidate();
         }
 
@@ -91,9 +86,8 @@ namespace RayCaster.FrontEnd
         private void slideAngle_Scroll(object sender, EventArgs e)
         {
             _map.Player.Angle = -slideAngle.Value;
-            Debug.WriteLine($"Player Angle: {-slideAngle.Value}");
             pic2DMap.Invalidate();
-
+            picRender.Invalidate();
         }
     }
 }
